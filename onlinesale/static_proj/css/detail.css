@@ -1,0 +1,32 @@
+.detail-brief{
+    margin-top: 10px;
+    padding-left: 100px;
+    padding-right: 100px;
+}
+
+.center{
+    text-align: center;
+}
+
+nav{
+    background-image: linear-gradient(to right top, #845ec2, #eb4d9f, #ff695a, #feac00, #a8eb12);
+    color:white;
+}
+
+.logo-image{
+    margin-right: 15%;
+}
+
+.main-detail{
+    display: flex;
+    margin: 30px;
+    justify-content:space-between;
+}
+iframe{
+    margin-left: 100px;
+}
+.actors-list{
+    display:flex;
+    text-align: justify;
+    align-items: stretch;
+}

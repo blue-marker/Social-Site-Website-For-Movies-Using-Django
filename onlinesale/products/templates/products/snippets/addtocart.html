@@ -1,0 +1,28 @@
+<!-- this html template is for rendering the button according to whether
+the product is in the cart or not, or whether its 'Out Of Stock' -->
+<form method="POST" action="{% url 'cart:update' %}"> 
+<!-- the POST data is send to update function in carts.view for business logic implementation -->
+    {% csrf_token %}
+     <!-- Remove -->
+    {% if in_cart %}
+        <input type="submit" value="Remove" class="btn btn-success"/>
+        <input type="hidden" name="prodquant" value="0">
+    <!-- Out Of Stock -->
+    {% elif quantity is 0 %}  <!-- quantity = object.quantity ( from detail.html)-->
+        <button type="button" value="Out Of Stock" class="btn btn-warning">Out Of Stock</button>
+    <!-- Add to Cart -->
+    {% else %}
+        <input type="submit" value="Add to Cart" class="btn btn-primary"/>
+        <span id="container">
+            <input type="number" min="0" max="50" name="prodquant" value="0">
+        </span>
+    {% endif %}
+<!-- information of product id is passed as hidden value to implement the business logic in carts.view-->
+    <input type="hidden" name="prodid" value="{{pid}}"/> <!-- pid = object.id  -->
+
+<!-- due to POST method, the above 'pid' value 
+ i.e prodid is passed into views.py of carts through request -->
+<!-- the POST request contains the pid value i.e prodid as key -->
+<!-- and both 'in_cart' and 'pid' value is passed from detail.html where pid = object.id and 'in_cart' as 'in_cart'  -->
+
+</form>

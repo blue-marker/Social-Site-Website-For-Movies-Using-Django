@@ -1,0 +1,17 @@
+.detail-brief{
+    padding-left: 200px;
+    padding-right: 200px;
+}
+
+.center{
+    text-align: center;
+}
+
+nav{
+    background-image: linear-gradient(to right top, #845ec2, #eb4d9f, #ff695a, #feac00, #a8eb12);
+    color:white;
+}
+
+.logo-image{
+    margin-right: 15%;
+}

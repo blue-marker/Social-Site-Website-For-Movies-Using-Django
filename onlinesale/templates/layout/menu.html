@@ -1,0 +1,157 @@
+{% load static %}
+<header class="main-head">
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+        
+          <ul class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+              <li class="nav-item active">
+                <a class="nav-link" href="{% url 'home' %}">Home <span class="sr-only">(current)</span></a>
+              </li>
+              <li class="nav-item active">
+                <a class="nav-link" href="{% url 'about' %}"> About <span class="sr-only">(current)</span></a>
+              </li>
+              <li class="nav-item active">
+                <a class="nav-link" href="{% url 'contact' %}"> Contact <span class="sr-only">(current)</span></a>
+              </li>
+              <li class="nav-item active">
+                <a class="nav-link" href="{% url 'blog-home' %}">Blogs<span class="sr-only">(current)</span></a>
+              </li>
+              <li class="nav-item active">
+                <a class="nav-link" href="{% url 'actor:lists' %}">Actors/Actresses<span class="sr-only">(current)</span></a>
+              </li>
+              <li class="nav-item active">
+                <a class="nav-link" href="{% url 'cart:list' %}"><i class="fa fa-shopping-cart"></i></a>
+              </li>
+              <li class="nav-item active">
+                <a class="nav-link" href="{% url 'product:cbv' %}">Movies<span class="sr-only">(current)</span></a>
+              </li>          
+              {% if request.user.is_authenticated %}      
+                <li class="nav-item active">
+                  <a class="nav-link" href="{% url 'signout' %}">Sign Out <span class="sr-only">(current)</span></a>
+                </li>
+              {% else %}
+                <li class="nav-item active">
+                  <a class="nav-link" href="{% url 'register' %}">Sign Up <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="{% url 'signin' %}">Sign In <span class="sr-only">(current)</span></a>
+                </li>
+              {% endif %}             
+            </ul>
+            <div>
+              <br>
+              <img class="rounded-circle" src="{% static 'img/my_logo.png' %}" alt="vescence" width=80>  
+              <!-- this won't work unless you wrote load static template above -->
+            </div>
+            
+            {% if request.get_full_path == '/product/cbv/' or 'page=1' in request.get_full_path and 'sort' in request.get_full_path %}
+              <ul class="list-inline mr-2">
+                <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Sort
+                  <span class="caret"></span>
+                <ul class="dropdown-menu">
+                  <li class="nav-item active">
+                    <a class="nav-link" href="{% url 'product:cbv' %}?sort=release_date">Release Date<span class="sr-only">(current)</span></a>
+                  </li>
+                  <li class="nav-item active">
+                    <a class="nav-link" href="{% url 'product:cbv' %}?sort=imdb">IMDb Ratings<span class="sr-only">(current)</span></a>
+                  </li>
+                  <li class="nav-item active">
+                    <a class="nav-link" href="{% url 'product:cbv' %}?sort=rating">Popularity Ratings<span class="sr-only">(current)</span></a>
+                  </li>
+                </ul>
+                </a></li>
+              </ul>
+            {% elif 'genre' in request.get_full_path %}
+            <!-- dropdown for sorts -->
+              <ul class="list-inline mr-2">
+                <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Sort By
+                  <span class="caret"></span>
+                <ul class="dropdown-menu">
+                  <li class="nav-item active">
+                    <a class="nav-link" href="{% url 'product:cbv' %}?genre={{ get_genre }}&sort=release_date">Release Date<span class="sr-only">(current)</span></a>
+                  </li>
+                  <li class="nav-item active">
+                    <a class="nav-link" href="{% url 'product:cbv' %}?genre={{ get_genre }}&sort=imdb">IMDb Ratings<span class="sr-only">(current)</span></a>
+                  </li>
+                  <li class="nav-item active">
+                    <a class="nav-link" href="{% url 'product:cbv' %}?genre={{ get_genre }}&sort=rating">Popularity Ratings<span class="sr-only">(current)</span></a>
+                  </li>
+                </ul>
+                </a></li>
+              </ul>
+            {% endif %}
+            <!-- dropdown for genres -->
+              <ul class="list-inline ml-2">
+                <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Genre
+                  <span class="caret"></span>
+                <ul class="dropdown-menu">
+                  <li>
+                    <a class="nav-link" href="{% url 'product:cbv' %}?genre=Mystery">Mystery<span class="sr-only">(current)</span></a>
+                  </li>
+                  <li>
+                    <a class="nav-link" href="{% url 'product:cbv' %}?genre=Fantasy">Fantasy<span class="sr-only">(current)</span></a>
+                  </li>
+                  <li> 
+                    <a class="nav-link" href="{% url 'product:cbv' %}?genre=Romance">Romance<span class="sr-only">(current)</span></a>
+                  </li>
+                  <li>
+                    <a class="nav-link" href="{% url 'product:cbv' %}?genre=Slice Of Life">Slice Of Life<span class="sr-only">(current)</span></a>
+                  </li>
+                  <li>
+                    <a class="nav-link" href="{% url 'product:cbv' %}?genre=Thriller">Thriller<span class="sr-only">(current)</span></a>
+                  </li>
+                  <li>
+                    <a class="nav-link" href="{% url 'product:cbv' %}?genre=Comedy-drama">Comedy-drama<span class="sr-only">(current)</span></a>
+                  </li>
+                  <li>
+                    <a class="nav-link" href="{% url 'product:cbv' %}?genre=Drama">Drama<span class="sr-only">(current)</span></a>
+                  </li>
+                </ul>
+                </a></li>
+              </ul>
+          
+                
+              <!-- <li class="nav-item active">
+                <a class="nav-link" href="{# url 'product:genre' genre='Mystery' #}">Mystery<span class="sr-only">(current)</span></a>
+              </li>
+              <li class="nav-item active">
+                <a class="nav-link" href="{# url 'product:genre' genre='Fantasy' #}">Fantasy<span class="sr-only">(current)</span></a>
+              </li>
+              <li class="nav-item active">
+                <a class="nav-link" href="{# url 'product:genre' genre='Romance' #}">Romance<span class="sr-only">(current)</span></a>
+              </li>
+              <li class="nav-item active">
+                <a class="nav-link" href="{# url 'product:genre' genre='Slice Of Life' #}">Slice Of Life<span class="sr-only">(current)</span></a>
+              </li>
+              <li class="nav-item active">
+                <a class="nav-link" href="{# url 'product:genre' genre='Thriller' #}">Thriller<span class="sr-only">(current)</span></a>
+              </li>
+              <li class="nav-item active">
+                <a class="nav-link" href="{# url 'product:genre' genre='Comedy-drama' #}">Comedy-drama<span class="sr-only">(current)</span></a>
+              </li>
+              <li class="nav-item active">
+                <a class="nav-link" href="{#  url 'product:genre' genre='Fantasy' #}">Drama<span class="sr-only">(current)</span></a>
+              </li>--> 
+      
+              {% if user.is_authenticated %}
+                <a class="nav-item nav-link" href="{% url 'profile:profile' slug=request.user.profile.slug %}">Profile</a>
+                <a class="nav-item nav-link" href="{% url 'post-create' %}">New Post</a>
+                <a class="nav-item nav-link" href="{% url 'watchlist:list' %}">Watchlist</a>
+              {% endif %}
+            
+              
+              <!-- this is where we include the search template -->
+              {% include 'search/search.html' with query=query %} <!-- this is same as below -->
+              <!-- {# include 'search/search.html'#} 
+                if I put % at both ends, then this template tag will also render even though its commented-->
+            
+          </ul>
+  </nav>
+</header>
+<br><br>

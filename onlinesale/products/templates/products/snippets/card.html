@@ -1,0 +1,19 @@
+<div class="card" style="width: 13rem;">
+
+    {% if obj.image %}
+        <img src="{{obj.image.url}}" class="card-img-top" alt="{{obj.title}}" width=200>
+    {% endif %}
+
+
+    <div class="card-body" >
+        <h5 class="card-title">{{obj.title}}</h5>
+        <p class="card-text">{{obj.createdDate|timesince}} ago</p>
+        <p class="card-text">{{obj.description|truncatewords:15}}</p>
+        <a href="{{obj.get_abs_url}}" class="btn btn-primary">View</a>
+<!-- the get_abs_url method helps in rendering the ProductDetailView of that product -->
+    </div>
+    
+</div>
+
+
+<!-- timesince and truncatewords are template filters -->

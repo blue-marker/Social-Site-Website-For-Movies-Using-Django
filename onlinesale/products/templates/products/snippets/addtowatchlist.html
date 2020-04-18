@@ -1,0 +1,13 @@
+<!-- this html template is for rendering the button according to whether
+the product is in the cart or not, or whether its 'Out Of Stock' -->
+<form method="POST" action="{% url 'watchlist:update' %}"> 
+    <!-- the POST data is send to update function in carts.view for business logic implementation -->
+        {% csrf_token %}
+         <!-- Remove -->
+        {% if in_watchlist %}
+            <input type="submit" value="Remove From Watchlist" class="btn btn-success"/>
+        {% else %}
+            <input type="submit" value="Add to Watchlist" class="btn btn-primary"/>
+        {% endif %}
+        <input type="hidden" name="prodid" value="{{pid}}"/> <!-- pid = object.id  -->
+    </form>

@@ -1,0 +1,48 @@
+{% load static %}
+<!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="{% static 'jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'bootstrap-js/bootstrap.min.js' %}" ></script>
+    <script src="{% static 'popper/popper.min.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js" integrity="sha256-R4pqcOYV8lt7snxMQO/HSbVCFRPMdrhAFMH+vr9giYI=" crossorigin="anonymous"></script>
+    <script src="{% static 'jquery-plugins/jquery.emojiRatings.js' %}"></script>
+    <script>
+
+        $("#element").emojiRating({
+
+            // Unicode
+            emoji: "U+2764",
+
+            // the number of stars
+            count: 10,
+
+            // font size
+            fontSize: 26,
+
+            // input name
+            inputName: "rating",
+
+            // // callback
+            onUpdate: function(count) {
+				$(".review-text").show();
+				$("#starCount").html(count + " Star");
+			}
+
+        });
+        
+        $("#rating").emojiRating({ 
+            onUpdate: function(count) { 
+                $("#starCount").html(count + " Star"); 
+            } 
+        });
+
+    </script>
+    
+    <script type="text/javascript">
+        $(".comment-reply-btn").click(function(event){
+            event.preventDefault();
+            $(this).parent().next(".comment-reply").fadeToggle();
+        });
+    </script>
+
+    

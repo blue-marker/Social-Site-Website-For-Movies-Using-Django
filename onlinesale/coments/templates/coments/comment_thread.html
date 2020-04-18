@@ -1,0 +1,28 @@
+{% extends 'layout/layout.html' %}
+{% load crispy_forms_tags %}  
+{% block mainblock %}
+
+<div class='col-sm-6 col-sm-offset-3'>
+    <p class="mb-0">{{comment.content}} </p>
+    <footer class="blockquote-footer">via {{comment.user.full_name}} | {{comment.timestamp|timesince}} ago | {% if comment.children.count > 0 %} {{comment.children.count}} Comment{% if comment.children.count > 1%}s{% endif%}|{% endif %}</footer>
+    <hr>
+    <!-- below are the comment replys  -->
+    <div>
+        {% for child_comment in comment.children %}
+            <blockquote class="blockquote">
+                <p class="mb-0">{{child_comment.content}} </p>
+                <footer class="blockquote-footer">via {{child_comment.user.full_name}} | {{child_comment.timestamp|timesince}} ago</footer>
+            </blockquote>
+        {% endfor %} 
+        <!-- reply form aka reply box  -->
+        <form method="post" action="."> {% csrf_token %}
+            {{ form|crispy }}
+            <input type="hidden" name="parent_id" value='{{ comment.id }}' class='btn btn-default'>
+            <input type="submit" value="Reply comment" class='btn btn-default'>
+        </form>
+        
+    </div>
+    <hr>
+</div>
+
+{% endblock %}

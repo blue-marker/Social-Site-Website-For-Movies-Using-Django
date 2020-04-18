@@ -1,0 +1,20 @@
+{% extends 'layout/layout.html' %}
+<!-- this renders the whole layout of the list of carts -->
+{% block mainblock %}
+{% load custom_tags %}
+    <div class="container">
+
+        <div class="row">
+        <!-- this for loop statement is below the opening tag for a reason -->
+        {% for prod_obj in watchlist_obj.products.all %}
+
+            <div>
+                <a href="{{prod_obj.get_abs_url}}"><img src="{{prod_obj.image.url}}" alt={{prod_obj.title}} width=150></a>
+            </div>
+            <div></div>
+            
+            {% cycle "" "" "</div><div class='row'><div class='col'><hr/></div></div><div class='row'>" %} 
+
+        {% endfor %}
+        </div>
+{% endblock %}

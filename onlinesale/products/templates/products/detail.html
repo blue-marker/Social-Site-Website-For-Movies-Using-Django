@@ -1,0 +1,180 @@
+{% extends 'layout/layout.html' %}
+
+
+{% block mainblock %}
+{% load crispy_forms_tags %}  
+    
+<!-- {# include 'products/snippets/addtocart.html' with in_cart=in_cart pid=object.id quantity=object.quantity #} -->
+<!-- appropriate button will be rendered here considering whether the product is added in 
+  cart or not-->
+
+<!-- 'in_cart' and 'object' values has been passed through 
+the context of ProductDetailView and above we are passing those 
+values to another html using variables with the help of 'with' statement  -->
+
+    <!-- <h6 class="card-title">&#x20b9;{{object.price}}</h6> -->
+    <!-- <p class="card-text">{{object.createdDate|timesince}} ago</p> -->
+
+
+    
+    <div class="main-detail">
+        <div class="sub-detail">
+            <h3 class="card-title">{{object.title}}</h3>
+
+            {% if object.image %}
+            <div class="detail-img">
+                <img src="{{object.image.url}}" alt="{{object.title}}" width="180">
+            </div>     
+            {% endif %}
+
+            {% if object.imdb %}
+                <h3>IMDb : {{object.imdb}}</h3>
+            {% endif %}
+            <p><h5>Release Date: {{object.release_date|date:"j F Y"}}</h5></p>
+            <p><h5>Director: {{object.director}}</h5></p>
+
+            <div>
+                {% if avg_rate %}
+                <h6>
+                    Audience Rating: <i class="fa fa-heart"></i> <span>{{avg_rate}}</span>
+                </h6>
+                {% endif %}
+            </div>
+
+            <div>
+                <!-- below is the javascript code for chart -->
+                <canvas id="myChart" width="100" height="100"></canvas>
+                {% block chart %}
+                    <script>
+                        // var endpoint ='/api/chart/data/'
+                        var endpoint = "{% url 'chart' path=object.slug %}"
+                        var defaultData = []
+                        var labels  = []
+                        $.ajax({
+                            method:"GET",
+                            url: endpoint,
+                            success: function(data){
+                                console.log(data.default)
+                                console.log(data.labels)
+                                labels = data.labels
+                                defaultData = data.default
+                                var ctx = document.getElementById('myChart');
+                                var myChart = new Chart(ctx, {
+                                    type: 'bar',
+                                    data: {
+                                        labels: labels,
+                                        datasets: [{
+                                            label: '# of Votes',
+                                            data: defaultData,
+                                            backgroundColor: [
+                                        'rgba(255, 99, 132, 0.2)',
+                                        'rgba(54, 162, 235, 0.2)',
+                                        'rgba(255, 206, 86, 0.2)',
+                                        'rgba(75, 192, 192, 0.2)',
+                                        'rgba(153, 102, 255, 0.2)',
+                                        'rgba(255, 159, 64, 0.2)',
+                                        'rgba(25, 59, 164, 0.2)',
+                                        'rgba(5, 159, 14, 0.2)',
+                                        'rgba(105, 159, 74, 0.2)',
+                                        'rgba(115, 59, 206, 0.2)',
+                                     ],
+                                    borderColor: [
+                                        'rgba(255, 99, 132, 1)',
+                                        'rgba(54, 162, 235, 1)',
+                                        'rgba(255, 206, 86, 1)',
+                                        'rgba(75, 192, 192, 1)',
+                                        'rgba(153, 102, 255, 1)',
+                                        'rgba(255, 159, 64, 1)',
+                                        'rgba(255, 159, 64, 0.2)',
+                                        'rgba(25, 59, 164, 0.2)',
+                                        'rgba(5, 159, 14, 0.2)',
+                                        'rgba(105, 159, 74, 0.2)',
+                                    ],
+                                    borderWidth: 1
+                                        }]
+                                    }
+                                })
+                            },
+                            error: function(error_data){
+                                console.log("error")
+                                console.log(error_data)
+                            }
+                        })
+                              
+                    </script>
+                {% endblock %}
+            </div>
+
+            <div>
+                {% if profile_rating %} My Rating : <h4>{{profile_rating.rating}}</h4>{% endif %}
+            </div>
+
+            <form method="POST" action="{% url 'product:update_rating' slug=object.slug %}">
+            {% csrf_token %}
+                <div id="element">
+                    <label for="rating">Rate this Movie</label>
+                    <div>
+                        <small>What do you think ?</small>
+                    </div>    
+                </div>
+                <span class="review-text" style="display:none"><span id="starCount"></span> Review</span>
+                <button type="submit" class="btn btn-default btn-block">Submit</button>
+            </form>
+
+        </div>
+
+        <div class="detail-description">
+            {% if object.trailer_link %}
+                <iframe width="560" height="315" src="{{object.trailer_link}}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            {% endif %}    
+            <p class="detail-brief">{{object.description}}</p>
+        </div>
+    </div>
+    <br>
+    <h4>Actors</h4>
+    <div class="actors-list">
+        {% for actor in object.actors.all %}
+            <div>
+                <a href="{{actor.get_abs_url}}" ><img src="{{actor.image.url}}" alt="{{actor.name}}" width=120></a>
+                <div>
+                    {{actor.name}}
+                </div>
+            </div>
+            <br>
+        {% endfor %}
+
+    </div>
+    
+    
+    <div>
+        <p class='lead'>Comments</p>
+        <form method="post" action="."> {% csrf_token %}
+            {{ comment_form|crispy }}
+            <input type="submit" value="Post comment" class='btn btn-default'>
+        </form>
+        <hr>
+        {% for comment in comments %}
+        <blockquote class="blockquote">
+            <p class="mb-0">{{comment.content}} </p>
+            <footer class="blockquote-footer">via {{comment.user.full_name}} | {{comment.timestamp|timesince}} ago | {% if comment.children.count > 0 %} {{comment.children.count}} Comment{% if comment.children.count > 1%}s{% endif%}|{% endif %}<a class='comment-reply-btn' href='#'>Reply</a> | <a class='' href='{{comment.get_absolute_url}}'>Thread</a></footer>
+            <div class="comment-reply" style='display:none;'>
+                {% for child_comment in comment.children %}
+                    <blockquote class="blockquote">
+                        <p class="mb-0">{{child_comment.content}} </p>
+                        <footer class="blockquote-footer">via {{child_comment.user.full_name}} | {{child_comment.timestamp|timesince}} ago</footer>
+                    </blockquote>
+                {% endfor %}            
+                <form method="post" action="."> {% csrf_token %}
+                    {{ comment_form|crispy }}
+                    <input type="hidden" name="parent_id" value='{{ comment.id }}' class='btn btn-default'>
+                    <input type="submit" value="Reply comment" class='btn btn-default'>
+                </form>
+            </div>
+        </blockquote>
+        <hr>
+        {% endfor %}
+    </div>
+    
+
+
+{% endblock %}

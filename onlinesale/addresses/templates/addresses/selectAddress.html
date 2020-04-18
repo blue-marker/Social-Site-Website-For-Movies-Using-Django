@@ -1,0 +1,12 @@
+<form method="POST" action="{% url 'address:attach' %}"> 
+    {% csrf_token %}
+    {% for address in addList|slice:":2" %}
+    <!-- the address is sliced so as to limit showing only two addresses max -->
+    <input type="radio" name="address" value="{{address.id}}"/>{{address.get_address|linebreaks}}
+    <br/>
+    {% endfor %}
+<!-- this is the addressForm which will be rendered in placeorder while executing -->
+    <input type="hidden" name="next_url" value="{{next_url}}"/>
+
+    <input type="submit" value="Select Address" class="btn btn-primary"/>
+</form>

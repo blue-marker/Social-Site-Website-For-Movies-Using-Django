@@ -1,0 +1,31 @@
+<!-- we have taken this snippets from the razorpay documentation for api  -->
+<form action="{% url 'order:payment' %}" method="POST">
+    {% csrf_token %}
+
+<!-- We will get the json response from the below javascript code
+and this 'POST' response will be actioned to payment defined in the url -->
+<script
+    src="https://checkout.razorpay.com/v1/checkout.js"
+    data-key="rzp_test_fPP6gYO5CQ8U9T"
+    data-amount="100"
+    data-name="Itvedant Education Pvt. Ltd."
+    data-description="Payment Details"
+    data-buttontext="Pay Now"
+    data-theme.color="#F37254"
+    data-description=""
+    data-prefill.name="{{ object.billingProfile.user.full_name }}"
+    data-prefill.email="{{ object.billingProfile.email }}"
+    data-prefill.contact="{{object.billingProfile.user.mobile}}"
+    data-notes.shopping_order_id="{{object.order_id}}">
+
+// data-amount="100" this is Rs.1 i.e 100 paise
+// in test mode we can't use more than Rs.1 amount
+
+// In live mode we will be doing this data-amount={{object.total}} 
+
+</script>
+
+<input type="hidden" name="shopping_order_id" value="{{object.order_id}}">
+<!-- we need the order id for our reference hence this value is send as hidden value -->
+
+</form>

@@ -1,0 +1,18 @@
+{% extends "layout/layout.html" %}
+{% block mainblock %}
+    <div class="content-section">
+      <div class="media">
+        <img class="img-thumbnail" src="{{ profile.image.url }}" width="150">
+        <div>
+          {% if request.user.profile.slug in request.get_full_path %}<a href="{% url 'profile:update' slug=profile.slug %}">Update Profile</a>{% endif %}
+        </div>
+        <div class="media-body">
+          <h2 class="account-heading">{{ profile.user.full_name }}</h2>
+          <p class="text-secondary">{{ profile.user.email }}</p>
+        </div>
+        <div>
+          <p>{{ profile.about_me }}</p>
+        </div>
+      </div>
+    </div>
+{% endblock mainblock %}

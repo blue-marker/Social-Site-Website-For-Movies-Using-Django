@@ -1,0 +1,17 @@
+{% extends "layout/layout.html" %}
+{% block mainblock %}
+    {% for post in posts %}
+        <article class="media content-section">
+          <img class="rounded-circle float-left" src="{{ post.author.profile.image.url }}" width=80>
+          <div class="media-body">
+            <div class="article-metadata">
+              <a class="mr-2" href="{% url 'profile:profile' post.author.profile.slug %}">{{ post.author }}</a>
+              <small class="text-muted">{{ post.date_posted|date:"F d, Y" }}</small>
+            </div>
+            <h2><a class="article-title" href="{% url 'post-detail' post.slug %}">{{ post.title }}</a></h2>
+            {% if post.image %}<img src="{{ post.image.url }}" alt='post_image' width=500>{% endif %}
+            <p class="article-content">{{ post.content|truncatewords:30 }}</p>
+          </div>
+        </article>
+    {% endfor %}
+{% endblock mainblock %}

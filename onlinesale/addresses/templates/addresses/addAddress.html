@@ -1,0 +1,16 @@
+<!-- this will be rendered in placeorder.html -->
+
+<!-- we have passed 'form' variable (which is addressForm) to be rendered here -->
+
+<!-- also 'next_url' (which is 'request.build_absolute_uri') is passed as hidden input on to the 'add_address' function in address.view i.e {% url 'address:add' %}-->
+
+<div class="container">
+    <form method="POST" action="{% url 'address:add' %}"> 
+        {% csrf_token %}
+        {{form}} 
+<!-- this is the addressForm which will be rendered in placeorder while executing -->
+        <input type="hidden" name="next_url" value="{{next_url}}"/>
+
+        <input type="submit" value="Add Address" class="btn btn-primary"/>
+    </form>
+</div>

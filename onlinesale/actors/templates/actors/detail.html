@@ -1,0 +1,37 @@
+{% extends 'layout/layout.html' %}
+
+{% block mainblock %}
+    
+    <h3 class="card-title">{{object.name}}</h3>
+
+
+
+    <h6 class="card-title">Date Of Birth: {{object.birthDate}}</h6>
+    {% with d=object.deathDate %}
+        <p class="card-text">Date Of Death{{d}}</p>
+    {% endwith %}
+
+    {% if object.image %}
+        <img src="{{object.image.url}}" alt="{{object.name}}" width="300">
+    {% endif %}
+    
+    <div class="card-body">
+        <p class="detail-brief">{{object.bio|linebreaks}}</p>
+    </div>
+    <br>
+    <h3>Movies</h3>
+    <div class="actors-list">
+        {% for movies in object.product_set.all %}
+            <div>
+                <a href="{{movies.get_abs_url}}" ><img src="{{movies.image.url}}" alt="{{movies.title}}" width=120></a>
+                <div>
+                    {{actor.name}}
+                </div>
+            </div>
+            <br>
+        {% endfor %}
+
+    </div>
+ 
+
+{% endblock %}

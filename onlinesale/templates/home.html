@@ -1,0 +1,20 @@
+{% extends 'layout/layout.html' %}
+
+{% block mainblock %}
+
+  {% if request.user.is_authenticated %}
+  <div class="alert alert-success" role="alert">
+    Welcome {{user.full_name}} !
+  </div>
+  {% else %}
+
+  <div class="alert alert-warning" role="alert">
+    You are not Signed in !
+  </div>
+  
+  {% endif%}
+
+  <h1>Amovara! <br>{{head}}</h1>>
+  <h6>{{content|linebreaks}}</h6>
+<!-- linebreaks is a template filter here which splits the para appropriately -->
+{% endblock %}   

@@ -1,0 +1,37 @@
+{% extends "layout/layout.html" %}
+{% block mainblock %}
+  <article class="media content-section">
+    <img class="rounded-circle article-img" src="{{ object.author.profile.image.url }}" width=80>
+    <div class="media-body">
+      <div class="article-metadata">
+        <a class="mr-2" href="#">{{ object.author }}</a>
+        <small class="text-muted">{{ object.date_posted|date:"F d, Y" }}</small>
+        {% if object.author == user %}
+          <div>
+            <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'post-update' object.slug %}">Update</a>
+            <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'post-delete' object.slug %}">Delete</a>
+          </div>
+        {% endif %}
+      </div>
+      <h2 class="article-title">{{ object.title }}</h2>
+      <p>Read Time: {{ object.read_time|time:"i" }} minutes</p>
+      {% if object.image %}<img src="{{ object.image.url }}" alt='post_image' width=350>{% endif %}
+      <p class="article-content">{{ object.content }}</p>
+      
+      Share: 
+      <a href="https://www.facebook.com/sharer/sharer.php?u= {{ request.build_absolute_uri }}.com/">
+        Facebook
+      </a>
+      <a href="https://twitter.com/home?status={{ share_string }}%20{{ request.build_absolute_uri }}/">
+        Twitter
+      </a>
+      <a href="http://www.reddit.com/submit?url={{ request.build_absolute_uri }}/&title={{ share_string }}.">
+        Reddit
+      </a>
+      <div class="fb-comments" data-href="{{ request.build_absolute_uri }}" data-width="" data-numposts="5"></div>
+    </div>
+    
+    
+    
+  </article>
+{% endblock mainblock %}

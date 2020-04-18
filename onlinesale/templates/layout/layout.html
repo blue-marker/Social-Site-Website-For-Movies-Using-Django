@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    {% include 'layout/css.html' %}
+    <title>Hello,world!</title>
+  </head>
+  <body>
+    <div id="fb-root"></div>
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v5.0"></script>
+    <!-- the above code is for embeded facebook comment -->
+    <!-- {# include 'layout/head.html' #} -->
+    {% include 'layout/menu.html' %}
+    <main role="main" class="container">
+      <div class="row">
+        <div class="col-lg-10 col-md-10 col-md-12">
+          {% if messages %}
+            {% for message in messages %}
+              <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+              </div>
+            {% endfor %}
+          {% endif %}
+
+          {% block mainblock %}
+  
+          {% endblock %}
+
+        </div>
+
+        <div class="col-lg-2 right-side">
+          <div class="content-section">
+            <h3>Check In</h3>
+            <p class='text-muted'>
+              <ul class="list-group">
+                <li class="list-group-item list-group-item-light">Add To Favourites</li>
+                {% if 'product' in request.path and 'cbv' not in request.get_full_path%}
+                  <li class="list-group-item list-group-item-light">{% include 'products/snippets/addtowatchlist.html' with in_watchlist=in_watchlist pid=object.id %}</li>
+                {% endif %}
+                {% if 'product' in request.path and 'cbv' not in request.get_full_path%}
+                  <li class="list-group-item list-group-item-light">{% include 'products/snippets/addtocart.html' with in_cart=in_cart pid=object.id quantity=object.quantity %}</li>
+                {% endif %}
+              </ul>
+            </p>
+          </div>
+        </div>
+
+      </div>
+      
+    </main>
+    
+  <!-- block is the django thing and 'main-block' is our variable-->
+    {% include 'layout/footer.html' %}
+    {% include 'layout/js.html' %}
+
+    {% block chart %}
+
+    {% endblock %}
+    
+  </body>
+  
+
+</html>

@@ -1,0 +1,59 @@
+{% extends 'layout/layout.html' %}
+{% block mainblock %}
+
+    {% if cart_obj.products.all %} 
+<!-- if there are products in cart and render below html template-->
+
+    <table class='table'>
+        <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Update</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            
+        </tr>
+        {% for prod_amt in cart_obj.no_of_products.all %}
+            <tr>
+                <td>{{forloop.counter}}</td>
+                <td>{{prod_amt.product.title}}
+                <td>{% include 'products/snippets/addtocart.html' with pid=prod_amt.product.id in_cart=True %}</td>
+<!-- this template is rendering the button in the cart with the 'in_cart'=True so it 
+renders as 'Remove' button -->
+                </td>
+                <td>&#x20b9;{% widthratio prod_amt.product.price 1 prod_amt.amount %}</td>
+                <td>{{prod_amt.amount}}</td>
+            </tr>
+        {% endfor %}
+        <tr>
+            <td colspan='2'><b>Subtotal</b></td>
+            <td>&#x20b9;{{cart_obj.subtotal}}</td>
+        </tr>
+        <tr>
+            <td colspan='2'><b>Total</b></td>
+            <td>&#x20b9;{{cart_obj.total}}</td>
+        </tr>
+    </table>
+    <!-- below code is for 'Order' button and the POST method is actioned to Order.view -->
+    <form method="POST" action="{% url 'order:create' %}">
+        {% csrf_token %}
+        <input type="submit" value="Order Now :D" class="btn btn-primary"/>
+    </form>
+
+    {% else %}
+
+        <h1>Cart Is Empty</h1>
+
+    {% endif %}
+
+{% endblock mainblock %}
+
+<!-- 
+For creating bar charts and such, this tag calculates the ratio of a given value to a maximum value, and then applies that ratio to a constant.
+
+For example:
+
+<img src="bar.png" alt="Bar"
+     height="10" width="{% widthratio this_value max_value max_width %}">
+
+If this_value is 175, max_value is 200, and max_width is 100, the image in the above example will be 88 pixels wide (because 175/200 = .875; .875 * 100 = 87.5 which is rounded up to 88). -->

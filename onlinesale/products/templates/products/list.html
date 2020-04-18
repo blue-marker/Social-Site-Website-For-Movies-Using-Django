@@ -1,0 +1,121 @@
+{% extends 'layout/layout.html' %}
+<!-- this renders the whole layout of the list of carts -->
+{% block mainblock %}
+{% load custom_tags %}
+    <div class="container">
+
+        <div class="row">
+        <!-- this for loop statement is below the opening tag for a reason -->
+        {% for obj in object_list %}
+
+            <div class="col-4 col-sm-4">
+                {% include 'products/snippets/card.html' with obj=obj %}
+                <!-- this renders the individual product cart -->
+            </div>
+            
+            <!-- {# if forloop.counter|divisibleby:3 #}
+                </div>
+            we are closing the row div here after every third iteration -->
+                <!-- <div class="row">
+                    <div class="col"><hr/></div>   -->
+            <!-- this code is for saperation line -->
+                <!-- </div> -->
+        <!-- below is the opening div tag for the next row -->
+                <!-- <div class="row"> -->
+            <!-- {# endif #} --> 
+
+            {% cycle "" "" "</div><div class='row'><div class='col'><hr/></div></div><div class='row'>" %} 
+
+        {% endfor %}
+        </div>
+        
+        <!-- this code is for only-sorted as well normal (without sort) pagination -->
+        {% if is_paginated and not is_genre %}
+
+            {% if page_obj.has_previous and 'sort' in request.get_full_path %}
+                <a class="btn btn-outline-info mb-4" href="?sort={% relative_url request.GET.urlencode %}&page=1">First</a> 
+                <!-- {% relative_url request.GET.urlencode %} returns the current sort value -->
+                <!-- "request.GET.urlencode": the urlencode function gets the 
+                    query string from the current get request url e.g "https://stackoverflow.com/questions/ask?next=1&value=3" 
+                we get 'next=1&value=3' This does not include the ? prefix, and it may not return the keys in the same order as in the original request.  -->
+                <a class="btn btn-outline-info mb-4" href="?sort={% relative_url request.GET.urlencode %}&page={{ page_obj.previous_page_number }}">Previous</a>
+            {% endif %}
+            {% if page_obj.has_previous and 'sort' not in request.get_full_path %}
+                <a class="btn btn-outline-info mb-4" href="?page=1">First</a>
+                <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+                <!-- page_obj.number outputs the current page number  -->
+                <!-- the current page number is highlighted -->
+                {% if page_obj.number == num and 'sort' in request.get_full_path %}
+                    <a class="btn btn-info mb-4" href="?sort={% relative_url request.GET.urlencode %}&page={{ num }}">{{ num }}</a>
+                {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' and 'sort' in request.get_full_path %}
+                <!-- the second condition prints out only three number after the current page number -->
+                <!-- add is a filter tag which helps in achieving above condition -->
+                    <a class="btn btn-outline-info mb-4" href="?sort={% relative_url request.GET.urlencode %}&page={{ num }}">{{ num }}</a>
+                {% endif %}
+
+                {% if page_obj.number == num and 'sort' not in request.get_full_path %}
+                    <a class="btn btn-info mb-4" href="?page={{ num }}">{{ num }}</a>
+                {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' and 'sort' not in request.get_full_path %}
+                    <a class="btn btn-outline-info mb-4" href="?page={{ num }}">{{ num }}</a>
+                {% endif %}
+
+            {% endfor %}
+
+            {% if page_obj.has_next and 'sort' in request.get_full_path %}
+                <a class="btn btn-outline-info mb-4" href="?sort={% relative_url request.GET.urlencode %}&page={{ page_obj.next_page_number }}">Next</a>
+                <a class="btn btn-outline-info mb-4" href="?sort={% relative_url request.GET.urlencode %}&page={{ page_obj.paginator.num_pages }}">Last</a>
+            {% endif %}
+            {% if page_obj.has_next and 'sort' not in request.get_full_path %}
+                <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.next_page_number }}">Next</a>
+                <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+            {% endif %}
+
+        {% endif %}
+        
+        <!-- this code is for genre/genre+sort paginated numbers -->
+        {% if is_paginated and is_genre %}
+
+            {% if page_obj.has_previous and 'sort' not in request.get_full_path %}
+                <a class="btn btn-outline-info mb-4" href="{% url 'product:cbv' %}?genre={{get_genre}}&page={{ page_obj.previous_page_number }}">Previous</a>
+            {% endif %}
+            {% if page_obj.has_previous and 'sort' in request.get_full_path %}
+                <a class="btn btn-outline-info mb-4" href="{% url 'product:cbv' %}?genre={{get_genre}}&sort={% relative_url request.GET.urlencode %}&page={{ page_obj.previous_page_number }}">Previous</a>
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+
+                {% if page_obj.number == num and 'sort' not in request.get_full_path %}
+                    <a class="btn btn-info mb-4" href="{% url 'product:cbv' %}?genre={{get_genre}}&page={{ num }}">{{ num }}</a>
+                {% endif %}
+                {% if page_obj.number != num and 'sort' not in request.get_full_path %}
+                    <a class="btn btn-outline-info mb-4" href="{% url 'product:cbv' %}?genre={{get_genre}}&page={{ num }}">{{ num }}</a>
+                {% endif %}
+
+                {% if page_obj.number == num and 'sort' in request.get_full_path %}
+                    <a class="btn btn-info mb-4" href="{% url 'product:cbv' %}?genre={{get_genre}}&sort={% relative_url request.GET.urlencode %}&page={{ num }}">{{ num }}</a>
+                {% endif %}
+                {% if page_obj.number != num and 'sort' in request.get_full_path %}
+                    <a class="btn btn-outline-info mb-4" href="{% url 'product:cbv' %}?genre={{get_genre}}&sort={% relative_url request.GET.urlencode %}&page={{ num }}">{{ num }}</a>
+                {% endif %}
+
+            {% endfor %}
+
+            {% if page_obj.has_next and 'sort' not in request.get_full_path %}
+                <a class="btn btn-outline-info mb-4" href="{% url 'product:cbv' %}?genre={{get_genre}}&page={{ page_obj.next_page_number }}">Next</a>
+            {% endif %}
+            {% if page_obj.has_next and 'sort' in request.get_full_path %}
+                <a class="btn btn-outline-info mb-4" href="{% url 'product:cbv' %}?genre={{get_genre}}&sort={% relative_url request.GET.urlencode %}&page={{ page_obj.next_page_number }}">Next</a>
+            {% endif %}
+
+        {% endif %}
+
+    </div>
+
+{% endblock mainblock %}
+
+    
+        
+

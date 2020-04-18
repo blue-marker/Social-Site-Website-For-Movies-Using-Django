@@ -1,0 +1,51 @@
+{% extends 'layout/layout.html' %}
+<!------------------------------------------------------------------------------------->
+{% block mainblock %}
+<!-- if the user is authenticated then this code renders the order_obj info -->
+{% if request.user.is_authenticated %}
+    <h3>{{order_obj.order_id}}</h3>
+    <h3>&#x20b9;{{order_obj.order_total}}</h3>
+    <h3>&#x20b9;{{order_obj.total}}</h3>
+<!-- if address is already included in the current order then render below code -->
+    {% if order_obj.address %}
+        {{order_obj.address.get_address|linebreaks}} 
+<!-- if the address exits we are calling 'get_address' function in which we 
+we have formated the address in a proper way  -->
+    {% include 'orders/paynow.html' with object=order_obj %} 
+        <!-- paynow button will be rendered here -->
+<!------------------------------------------------------------------------------------->
+    {% else %} 
+<!-- if address is not included in the current order yet then we are giving a choice to either fill a form for new address or select from the existing addresses-->
+    <div class="row">
+            <div class="col">
+                <h5>Add New Address</h5>
+                {% include 'addresses/addAddress.html' with form=addressForm next_url=request.build_absolute_uri %}
+<!-- by template inheritance we are rendering the 'addAddress.html' and also passing in 
+'addressForm' & 'request.build_absolute_uri' with the help of variables-->
+
+                                 <!-- address form will be rendered here -->
+
+<!-- note that 'addressForm' itself along with 'loginform' is passed through context data from order.view (create_order) -->
+            </div>
+            {% if addList %} <!-- if the address object list exists then render the below code -->
+            <div class="col">
+                <h5>Select Address</h5>
+                {% include 'addresses/selectAddress.html' with addList=addList next_url=request.build_absolute_uri %}
+            </div>
+            {% endif %}
+    </div>
+    {% endif %}
+<!-------------------------------------------------------------------------------------->
+<!-- if the user is not authenticated then this code renders the login form -->
+{% else %}
+    <div class="col-6">
+        <form method="POST" action="{% url 'signin' %}">
+            {% csrf_token %}
+            {{loginform.as_p}}
+            <input type="submit" value="Login" class="btn btn-primary" />
+            <input type="hidden" name="next_url" value="{{request.build_absolute_uri}}" />
+        </form>
+    </div>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends 'layout/layout.html' %}
+
+{% block mainblock %}
+
+<form method="POST"> <!-- the POST logic is defined in the view itself hence action is not assigned  -->
+{% csrf_token %}
+
+    <div class="col-6">
+        {{signinform.as_p}}
+        <input type="Submit" value="Submit" class="btn btn-primary"/>
+        {% if messages %}
+        {% for message in messages %}
+        <div {% if message.tags %} class="alert {{message.tags}}" {% endif %} role="alert">
+            {{message}} 
+<!-- if the user is not an authenticated user "Invalid Credentials" message is rendered here -->
+        </div>
+        {% endfor %}
+        {% endif %}
+    </div>
+
+</form>
+
+{% endblock %}
